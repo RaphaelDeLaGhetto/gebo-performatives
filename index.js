@@ -50,3 +50,16 @@ function _getMultipartBoundary(length) {
   };
 exports.getMultipartBoundary = _getMultipartBoundary;
 
+
+/**
+ * Take a standard gebo message and present it as 
+ * multipart/form-data.
+ *
+ * @param Object
+ * @return string
+ */
+function _makeMultipartBody(message) {
+
+  };
+exports.makeMultipartBody = _makeMultipartBody;
+
