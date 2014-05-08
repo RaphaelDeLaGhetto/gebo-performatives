@@ -26,5 +26,8 @@
     "extend": "^1.2.1",
     "grunt": "^0.4.4",
     "grunt-contrib-nodeunit": "^0.3.3"
+  },
+  "dependencies": {
+    "mime": "^1.2.11"
   }
 }
