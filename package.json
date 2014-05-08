@@ -1,0 +1,29 @@
+{
+  "name": "gebo-performatives",
+  "version": "0.0.0",
+  "description": "A speech act module for the gebo agent",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt nodeunit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RaphaelDeLaGhetto/gebo-performatives.git"
+  },
+  "keywords": [
+    "gebo",
+    "agent",
+    "speech",
+    "acts"
+  ],
+  "author": "Daniel Bidulock",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RaphaelDeLaGhetto/gebo-performatives/issues"
+  },
+  "homepage": "https://github.com/RaphaelDeLaGhetto/gebo-performatives",
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-contrib-nodeunit": "^0.3.3"
+  }
+}
