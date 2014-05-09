@@ -293,7 +293,7 @@ exports.request = {
             assert.equal(options.port, 443);
             assert.equal(options.path, '/perform');
             assert.equal(options.method, 'POST');
-            assert.equal(options.headers['Content-Type'], 'multipart/form-data; boundary=--SomeBoundary');
+            assert.equal(options.headers['Content-Type'], 'multipart/form-data; boundary=SomeBoundary');
             assert.equal(options.headers['Content-Length'], 720);
              
             done({ on: function(evt, done) {

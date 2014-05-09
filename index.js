@@ -123,7 +123,7 @@ module.exports = function() {
                         port: 443,
                         path: '/perform',
                         method: 'POST',
-                        headers: { 'Content-Type': 'multipart/form-data; boundary=' + boundary,
+                        headers: { 'Content-Type': 'multipart/form-data; boundary=' + boundary.replace(/^--/, ''),
                                    'Content-Length': multipartBody.length },
                   };
     
