@@ -155,4 +155,6 @@ module.exports = function() {
           });
       };
     exports.request = _request;
+
+    return exports;
 }();
