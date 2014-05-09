@@ -1,5 +1,7 @@
-var extend = require('extend'),
+var assert = require('assert'),
+    extend = require('extend'),
     fs = require('fs'),
+    https = require('https'),
     performative = require('..');
 
 var ACCESS_TOKEN = '1234';
@@ -100,7 +102,7 @@ exports.getMultipartBoundary = {
  */
 exports.makeMultipartBody = {
     setUp: function(callback) {
-        this._oldFunc = performative.getMultipartBoundary;
+        this._realFunc = performative.getMultipartBoundary;
         performative.getMultipartBoundary = function() {
             return BOUNDARY;
           };
@@ -117,7 +119,7 @@ exports.makeMultipartBody = {
     },
 
     tearDown: function(callback) {
-        performative.getMultipartBoundary = this._oldFunc;
+        performative.getMultipartBoundary = this._realFunc;
         callback();
     },
 
@@ -268,6 +270,67 @@ exports.makeMultipartBody = {
             test.equal(body, null);
             test.equal(err, '/no/such/path/toThisFile.txt does not exist');
             test.done();               
+          });
+    },
+};
+
+/**
+ * request
+ */
+exports.request = {
+
+    setUp: function(callback) {
+
+        this._realGetMultipartBoundary = performative.getMultipartBoundary;
+        performative.getMultipartBoundary = function() {
+            return BOUNDARY;
+          };
+
+        this._realRequest = https.request;
+        https.request = function(options, done) {
+
+            assert.equal(options.hostname, 'agent.capitolhill.ca');
+            assert.equal(options.port, 443);
+            assert.equal(options.path, '/perform');
+            assert.equal(options.method, 'POST');
+            assert.equal(options.headers['Content-Type'], 'multipart/form-data; boundary=--SomeBoundary');
+            assert.equal(options.headers['Content-Length'], 720);
+             
+            done({ on: function(evt, done) {
+                            switch(evt) {
+                                case 'data':
+                                    done('Hello, friendo');
+                                    break;
+                                case 'end':
+                                    done(null);
+                                    break;
+                            }
+                        },
+                   setEncoding: function() {},
+                });
+
+            return { end: function() {},
+                     on: function(evt, done) {},
+                     write: function(body) {
+                                assert.ok(body instanceof Buffer);
+                              },
+                   };
+          };
+        callback();
+    },
+
+    tearDown: function(callback) {
+        https.request = this._realRequest;
+        performative.getMultipartBoundary = this._realGetMultipartBoundary;
+
+        callback();
+    },
+
+    'POST a request performative to the given gebo': function(test) {
+        test.expect(1);
+        performative.request(MESSAGE, function(err, msg) {
+            test.equal(msg, 'Hello, friendo');
+            test.done();
           });
     },
 

@@ -1,5 +1,6 @@
 
 var fs = require('fs'),
+    https = require('https'),
     mime = require('mime');
 
 /**
@@ -99,4 +100,65 @@ function _makeMultipartBody(message, done) {
   };
 exports.makeMultipartBody = _makeMultipartBody;
 
+
+/**
+ * POST a request performative to the gebo provided
+ * in the message
+ *
+ * @param Object
+ * @param function
+ */
+function _request(message, done) {
+    _makeMultipartBody(message, function(err, str) {
+        if (err) {
+          done(err, null);
+        }
+        else {
+          var multipartBody = new Buffer(str);
+          var boundary = str.slice(0, str.indexOf(CRLF));
+
+          var options = {
+                    hostname: message.gebo.replace(/^http[s]:\/\//i, ''),
+                    port: 443,
+                    path: '/perform',
+                    method: 'POST',
+                    headers: { 'Content-Type': 'multipart/form-data; boundary=' + boundary,
+                               'Content-Length': multipartBody.length },
+              };
+
+          var req = https.request(options, function(res) {
+                var data = '';
+                res.setEncoding('utf8');
+
+                res.on('data', function(chunk) {
+                    data += chunk;
+                  });
+
+                res.on('end', function(err) {
+                      if (err) {
+                        done(err);
+                      }
+                      else {
+                        done(null, data);
+                      }
+                  });
+            });
+
+          req.on('error', function(err) {
+                done(err);
+            });
+
+          req.write(multipartBody);
+          req.end();
+        }
+      });
+
+//    req.on('error', function(e) {
+//        console.log('Couldn\'t process document: ' + e.message);
+//      });
+//
+//    req.write(multipartBody);
+//    req.end();
+  };
+exports.request = _request;
 
