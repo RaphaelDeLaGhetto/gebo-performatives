@@ -62,8 +62,6 @@ exports.getMultipartBoundary = _getMultipartBoundary;
  * @param callback
  */
 function _makeMultipartBody(message, done) {
-    // This is called from exports so that the tests
-    // can spoof the function call
     var boundary = exports.getMultipartBoundary();
     var formData = boundary;
     var error = false;
@@ -94,8 +92,11 @@ function _makeMultipartBody(message, done) {
       });
 
     if (!error) {
+      // Add the closing boundary
+      formData = formData.trim() + '--';
       done(null, formData);
     }
   };
 exports.makeMultipartBody = _makeMultipartBody;
+
 
