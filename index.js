@@ -1,14 +1,13 @@
-
-var fs = require('fs'),
-    https = require('https'),
-    mime = require('mime');
-
 /**
  * gebo-performatives
  *
  * 2014 Daniel Bidulock
  * MIT
  */
+
+var fs = require('fs'),
+    https = require('https'),
+    mime = require('mime');
 
 /**
  * Form data lines terminate with this for some reason
@@ -152,13 +151,6 @@ function _request(message, done) {
           req.end();
         }
       });
-
-//    req.on('error', function(e) {
-//        console.log('Couldn\'t process document: ' + e.message);
-//      });
-//
-//    req.write(multipartBody);
-//    req.end();
   };
 exports.request = _request;
 

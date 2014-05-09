@@ -322,7 +322,6 @@ exports.request = {
     tearDown: function(callback) {
         https.request = this._realRequest;
         performative.getMultipartBoundary = this._realGetMultipartBoundary;
-
         callback();
     },
 
