@@ -1,0 +1,38 @@
+
+--SomeBoundary
+Content-Disposition: form-data; name="sender"
+
+daniel@capitolhill.ca
+--SomeBoundary
+Content-Disposition: form-data; name="receiver"
+
+agent@capitolhill.ca
+--SomeBoundary
+Content-Disposition: form-data; name="performative"
+
+request
+--SomeBoundary
+Content-Disposition: form-data; name="action"
+
+greeting
+--SomeBoundary
+Content-Disposition: form-data; name="content"
+
+{"resource":"resumes","format":"json"}
+--SomeBoundary
+Content-Disposition: form-data; name="gebo"
+
+https://agent.capitolhill.ca
+--SomeBoundary
+Content-Disposition: form-data; name="access_token"
+
+1234
+--SomeBoundary
+Content-Disposition: form-data; name="myFile"; filename="text.txt"
+Content-Type: application/octet-stream
+
+My name is Daniel Bidulock
+(403) 808-HUMP
+I love God (AKA Jesus, AKA J-Diddy, AKA The Notorious G-O-D), family, and freedom
+
+--SomeBoundary--
