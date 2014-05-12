@@ -96,6 +96,8 @@ module.exports = function() {
         if (!error) {
           // Add the closing boundary
           formData = formData.trim() + '--';
+          // Add the opening CRLF
+          formData = CRLF + formData;
           done(null, formData);
         }
       };
@@ -116,7 +118,7 @@ module.exports = function() {
             }
             else {
               var multipartBody = new Buffer(str);
-              var boundary = str.slice(0, str.indexOf(CRLF));
+              var boundary = str.slice(0, str.indexOf(CRLF, 2)).trim();
     
               var options = {
                         hostname: message.gebo.replace(/^http[s]:\/\//i, ''),

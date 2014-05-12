@@ -4,16 +4,10 @@ var assert = require('assert'),
     https = require('https'),
     performative = require('..');
 
+
 var ACCESS_TOKEN = '1234';
 
-var MESSAGE = {
-        sender: 'daniel@capitolhill.ca',
-        receiver: 'agent@capitolhill.ca',
-        performative: 'request',
-        action: 'greeting',
-        gebo: 'https://agent.capitolhill.ca',
-        access_token: ACCESS_TOKEN,
-    };
+var BOUNDARY = '--SomeBoundary\r\n';
 
 var CONTENT = {
         resource: 'greetings',
@@ -29,7 +23,17 @@ var FILES = {
         }
     };
 
-var BOUNDARY = '--SomeBoundary\r\n';
+var MESSAGE = {
+        sender: 'daniel@capitolhill.ca',
+        receiver: 'agent@capitolhill.ca',
+        performative: 'request',
+        action: 'greeting',
+        gebo: 'https://agent.capitolhill.ca',
+        access_token: ACCESS_TOKEN,
+    };
+
+// Note the path
+var SAMPLE_POST = fs.readFileSync('./test/sample/post.txt', { encoding: 'utf8' });
 
 /**
  * getMultipartBoundary
@@ -126,7 +130,7 @@ exports.makeMultipartBody = {
     'Take a simple JSON formatted gebo message and return the body for a multipart/form-data POST': function(test) {
         test.expect(1);
 
-        var expected = BOUNDARY +
+        var expected = '\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="sender"\r\n\r\ndaniel@capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="receiver"\r\n\r\nagent@capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="performative"\r\n\r\nrequest\r\n' + BOUNDARY +
@@ -151,7 +155,7 @@ exports.makeMultipartBody = {
         test.equal(message.content.resource, 'greetings');
         test.equal(message.content.mood, 'friendly');
 
-        var expected = BOUNDARY +
+        var expected = '\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="sender"\r\n\r\ndaniel@capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="receiver"\r\n\r\nagent@capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="performative"\r\n\r\nrequest\r\n' + BOUNDARY +
@@ -178,7 +182,7 @@ exports.makeMultipartBody = {
 
         var data = fs.readFileSync('/tmp/psalm90-12.txt');
 
-        var expected = BOUNDARY +
+        var expected = '\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="sender"\r\n\r\ndaniel@capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="receiver"\r\n\r\nagent@capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="performative"\r\n\r\nrequest\r\n' + BOUNDARY +
@@ -206,7 +210,7 @@ exports.makeMultipartBody = {
 
         var data = fs.readFileSync('/tmp/psalm90-12.txt');
 
-        var expected = BOUNDARY +
+        var expected = '\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="sender"\r\n\r\ndaniel@capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="receiver"\r\n\r\nagent@capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="performative"\r\n\r\nrequest\r\n' + BOUNDARY +
@@ -239,7 +243,7 @@ exports.makeMultipartBody = {
 
         var data = fs.readFileSync('/tmp/psalm90-12.txt');
 
-        var expected = BOUNDARY +
+        var expected = '\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="sender"\r\n\r\ndaniel@capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="receiver"\r\n\r\nagent@capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="performative"\r\n\r\nrequest\r\n' + BOUNDARY +
@@ -272,6 +276,28 @@ exports.makeMultipartBody = {
             test.done();               
           });
     },
+
+    'Generate a POST identical to the one in the sample directory': function(test) {
+        test.expect(1);
+
+        var message = {};
+        extend(true, message, MESSAGE);
+        message.files = {};
+        extend(true, message.files,
+                        { 
+                            myFile: {
+                                name: 'text.txt',
+                                path: 'test/sample/text.txt',
+                            }
+                        });
+        performative.makeMultipartBody(message, function(err, body) {
+            if (err) {
+              test.ok(false, err);
+            }
+            test.equal(body, SAMPLE_POST);
+            test.done();
+          });
+    },
 };
 
 /**
@@ -294,7 +320,7 @@ exports.request = {
             assert.equal(options.path, '/perform');
             assert.equal(options.method, 'POST');
             assert.equal(options.headers['Content-Type'], 'multipart/form-data; boundary=SomeBoundary');
-            assert.equal(options.headers['Content-Length'], 720);
+            assert.equal(options.headers['Content-Length'], 722);
              
             done({ on: function(evt, done) {
                             switch(evt) {
