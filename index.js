@@ -79,7 +79,9 @@ module.exports = function() {
                     try {
                       var data = fs.readFileSync(message.files[file].path);
                       formData += 'Content-Disposition: form-data; name="' + file + '"; filename="' + message.files[file].name + '"' + CRLF;
-                      formData += 'Content-Type: ' + mime.lookup(message.files[file].path) + CRLF + CRLF;
+                      //formData += 'Content-Type: ' + mime.lookup(message.files[file].path) + CRLF + CRLF;
+                      formData += 'Content-Type: application/octet-stream' + CRLF + CRLF;
+
                       formData += data + CRLF + boundary;
                     }
                     catch (err) {
@@ -97,7 +99,7 @@ module.exports = function() {
           // Add the closing boundary
           formData = formData.trim() + '--';
           // Add the opening CRLF
-          formData = CRLF + formData;
+          formData = CRLF + formData + '\n';
           done(null, formData);
         }
       };
@@ -125,6 +127,7 @@ module.exports = function() {
                         port: 443,
                         path: '/perform',
                         method: 'POST',
+                        rejectUnauthorized: false,
                         headers: { 'Content-Type': 'multipart/form-data; boundary=' + boundary.replace(/^--/, ''),
                                    'Content-Length': multipartBody.length },
                   };

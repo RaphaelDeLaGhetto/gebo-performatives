@@ -136,7 +136,7 @@ exports.makeMultipartBody = {
                        'Content-Disposition: form-data; name="performative"\r\n\r\nrequest\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="action"\r\n\r\ngreeting\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="gebo"\r\n\r\nhttps://agent.capitolhill.ca\r\n' + BOUNDARY +
-                       'Content-Disposition: form-data; name="access_token"\r\n\r\n' + ACCESS_TOKEN + '\r\n' + BOUNDARY.trim() + '--';
+                       'Content-Disposition: form-data; name="access_token"\r\n\r\n' + ACCESS_TOKEN + '\r\n' + BOUNDARY.trim() + '--\n';
 
         performative.makeMultipartBody(MESSAGE, function(err, body) {
             test.equal(body, expected);
@@ -162,7 +162,7 @@ exports.makeMultipartBody = {
                        'Content-Disposition: form-data; name="action"\r\n\r\ngreeting\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="gebo"\r\n\r\nhttps://agent.capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="access_token"\r\n\r\n' + ACCESS_TOKEN + '\r\n' + BOUNDARY +
-                       'Content-Disposition: form-data; name="content"\r\n\r\n' + JSON.stringify(CONTENT) + '\r\n' + BOUNDARY.trim() + '--';
+                       'Content-Disposition: form-data; name="content"\r\n\r\n' + JSON.stringify(CONTENT) + '\r\n' + BOUNDARY.trim() + '--\n';
 
         performative.makeMultipartBody(message, function(err, body) {
             test.equal(body, expected);
@@ -171,9 +171,7 @@ exports.makeMultipartBody = {
     },
 
     'Take a gebo message with a file and return the body for a multipart/form-data POST': function(test) { test.expect(1);
-
-        var message = MESSAGE;
-        message.files = FILES;
+        test.expect(1);
 
         var message = {};
         extend(true, message, MESSAGE);
@@ -190,7 +188,8 @@ exports.makeMultipartBody = {
                        'Content-Disposition: form-data; name="gebo"\r\n\r\nhttps://agent.capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="access_token"\r\n\r\n' + ACCESS_TOKEN + '\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="scripture"; filename="psalm90-12.txt"\r\n' + 
-                       'Content-Type: text/plain\r\n\r\n' + data + '\r\n' +  BOUNDARY.trim() + '--';
+                       //'Content-Type: text/plain\r\n\r\n' + data + '\r\n' +  BOUNDARY.trim() + '--';
+                       'Content-Type: application/octet-stream\r\n\r\n' + data + '\r\n' +  BOUNDARY.trim() + '--\n';
 
         performative.makeMultipartBody(message, function(err, body) {
             test.equal(body, expected);
@@ -217,9 +216,10 @@ exports.makeMultipartBody = {
                        'Content-Disposition: form-data; name="action"\r\n\r\ngreeting\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="gebo"\r\n\r\nhttps://agent.capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="access_token"\r\n\r\n' + ACCESS_TOKEN + '\r\n' + BOUNDARY +
+                       'Content-Disposition: form-data; name="content"\r\n\r\n' + JSON.stringify(CONTENT) + '\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="scripture"; filename="psalm90-12.txt"\r\n' + 
-                       'Content-Type: text/plain\r\n\r\n' + data + '\r\n' +  BOUNDARY +
-                       'Content-Disposition: form-data; name="content"\r\n\r\n' + JSON.stringify(CONTENT) + '\r\n' + BOUNDARY.trim() + '--';
+                       //'Content-Type: text/plain\r\n\r\n' + data + '\r\n' +  BOUNDARY +
+                       'Content-Type: application/octet-stream\r\n\r\n' + data + '\r\n' +  BOUNDARY.trim() + '--\n';
 
         performative.makeMultipartBody(message, function(err, body) {
             test.equal(body, expected);
@@ -251,9 +251,11 @@ exports.makeMultipartBody = {
                        'Content-Disposition: form-data; name="gebo"\r\n\r\nhttps://agent.capitolhill.ca\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="access_token"\r\n\r\n' + ACCESS_TOKEN + '\r\n' + BOUNDARY +
                        'Content-Disposition: form-data; name="scripture"; filename="psalm90-12.txt"\r\n' + 
-                       'Content-Type: text/plain\r\n\r\n' + data + '\r\n' +  BOUNDARY +
+                       //'Content-Type: text/plain\r\n\r\n' + data + '\r\n' +  BOUNDARY +
+                       'Content-Type: application/octet-stream\r\n\r\n' + data + '\r\n' +  BOUNDARY +
                        'Content-Disposition: form-data; name="samePassage"; filename="psalm90-12.txt"\r\n' + 
-                       'Content-Type: text/plain\r\n\r\n' + data + '\r\n' +  BOUNDARY.trim() + '--';
+                       //'Content-Type: text/plain\r\n\r\n' + data + '\r\n' +  BOUNDARY.trim() + '--';
+                       'Content-Type: application/octet-stream\r\n\r\n' + data + '\r\n' +  BOUNDARY.trim() + '--\n';
 
         performative.makeMultipartBody(message, function(err, body) {
             test.equal(body, expected);
@@ -282,6 +284,8 @@ exports.makeMultipartBody = {
 
         var message = {};
         extend(true, message, MESSAGE);
+        message.content = {};
+        extend(true, message.content, CONTENT);
         message.files = {};
         extend(true, message.files,
                         { 
@@ -290,6 +294,7 @@ exports.makeMultipartBody = {
                                 path: 'test/sample/text.txt',
                             }
                         });
+
         performative.makeMultipartBody(message, function(err, body) {
             if (err) {
               test.ok(false, err);
@@ -320,7 +325,7 @@ exports.request = {
             assert.equal(options.path, '/perform');
             assert.equal(options.method, 'POST');
             assert.equal(options.headers['Content-Type'], 'multipart/form-data; boundary=SomeBoundary');
-            assert.equal(options.headers['Content-Length'], 722);
+            assert.equal(options.headers['Content-Length'], 521);
              
             done({ on: function(evt, done) {
                             switch(evt) {

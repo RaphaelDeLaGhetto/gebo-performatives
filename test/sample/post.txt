@@ -16,10 +16,6 @@ Content-Disposition: form-data; name="action"
 
 greeting
 --SomeBoundary
-Content-Disposition: form-data; name="content"
-
-{"resource":"resumes","format":"json"}
---SomeBoundary
 Content-Disposition: form-data; name="gebo"
 
 https://agent.capitolhill.ca
@@ -27,6 +23,10 @@ https://agent.capitolhill.ca
 Content-Disposition: form-data; name="access_token"
 
 1234
+--SomeBoundary
+Content-Disposition: form-data; name="content"
+
+{"resource":"greetings","mood":"friendly"}
 --SomeBoundary
 Content-Disposition: form-data; name="myFile"; filename="text.txt"
 Content-Type: application/octet-stream
