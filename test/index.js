@@ -33,7 +33,8 @@ var MESSAGE = {
     };
 
 // Note the path
-var SAMPLE_POST = fs.readFileSync('./test/sample/post.txt', { encoding: 'utf8' });
+var SAMPLE_POST = fs.readFileSync('./test/sample/post.txt', { encoding: 'utf8' }),
+    SAMPLE_POST_2 = fs.readFileSync('./test/sample/post2.txt', { encoding: 'utf8' });
 
 /**
  * getMultipartBoundary
@@ -279,7 +280,7 @@ exports.makeMultipartBody = {
           });
     },
 
-    'Generate a POST identical to the one in the sample directory': function(test) {
+    'Generate a POST identical to post.txt in the sample directory': function(test) {
         test.expect(1);
 
         var message = {};
@@ -300,6 +301,42 @@ exports.makeMultipartBody = {
               test.ok(false, err);
             }
             test.equal(body, SAMPLE_POST);
+            test.done();
+          });
+    },
+
+    'Generate a POST identical to post2.txt in the sample directory': function(test) {
+        test.expect(1);
+
+        performative.getMultipartBoundary = function() {
+            return '-----------------------------10102754414578508781458777923\r\n';
+          };
+
+        var message = {
+                sender: 'bob@example.com',    
+                receiver: 'resner-agent@hiregroundsoftware.com',
+                performative: 'request',      
+                action: 'recognize',
+                content: {
+                    resource: 'resumes',          
+                    format: 'json'
+                },
+                gebo: 'https://192.168.1.241',
+                access_token: 'kh69HPPKdyetpfvNPM9MWykEeSRsFDqQhY5uMvBWDibKSfJoVj4U7CaQSwNTN11ac2libeMo2WiQ37Kp2D3epF3aPt1ZY1STHLYv2UEBGCfkrxpcc82WYRw3Rp0nZoXyvlyBcUreppTq1EZge3VaTFjbstK4addNauNc9uaXSeQ43mSWiNcxBNlE34HRDeUbCNKyf0ndCvaH0BBfUUOTZyvul78QhhM8pQRagvpcrhdP2XregEVi2s1TwaaqjFey',
+//                access_token: ACCESS_TOKEN,
+                files: {
+                    resume: {
+                        name: 'text.txt',
+                        path: 'test/sample/text.txt',
+                    },
+                },
+            };
+
+        performative.makeMultipartBody(message, function(err, body) {
+            if (err) {
+              test.ok(false, err);
+            }
+            test.equal(body, SAMPLE_POST_2);
             test.done();
           });
     },
