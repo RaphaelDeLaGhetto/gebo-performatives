@@ -140,7 +140,7 @@ exports.makeMultipartBody = {
                        'Content-Disposition: form-data; name="access_token"\r\n\r\n' + ACCESS_TOKEN + '\r\n' + BOUNDARY.trim() + '--\n';
 
         performative.makeMultipartBody(MESSAGE, function(err, body) {
-            test.equal(body, expected);
+            test.equal(body.toString(), expected);
             test.done();               
           });
     },
@@ -166,7 +166,7 @@ exports.makeMultipartBody = {
                        'Content-Disposition: form-data; name="content"\r\n\r\n' + JSON.stringify(CONTENT) + '\r\n' + BOUNDARY.trim() + '--\n';
 
         performative.makeMultipartBody(message, function(err, body) {
-            test.equal(body, expected);
+            test.equal(body.toString(), expected);
             test.done();               
           });
     },

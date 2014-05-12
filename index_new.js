@@ -51,7 +51,8 @@ module.exports = function() {
           boundary += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length));
         }
     
-        return boundary + CRLF;
+        return '---------------------------10102754414578508781458777923';
+        //return boundary + CRLF;
       };
     exports.getMultipartBoundary = _getMultipartBoundary;
     
@@ -117,48 +118,6 @@ module.exports = function() {
         }
       };
     exports.makeMultipartBody = _makeMultipartBody;
- 
-//    function _makeMultipartBody(message, done) {
-//        var boundary = exports.getMultipartBoundary();
-//        var formData = boundary;
-//        var error = false;
-//    
-//        var keys = Object.keys(message);
-//        keys.forEach(function(key) {
-//            if (key.toLowerCase() === 'content') {
-//              formData += 'Content-Disposition: form-data; name="' + key + '"' + CRLF + CRLF + JSON.stringify(message[key]) + CRLF + boundary;
-//            }
-//            else if (key.toLowerCase() === 'files') {
-//              var files = Object.keys(message.files);
-//              files.forEach(function(file) {
-//                    try {
-//                      var data = fs.readFileSync(message.files[file].path);
-//                      formData += 'Content-Disposition: form-data; name="' + file + '"; filename="' + message.files[file].name + '"' + CRLF;
-//                      //formData += 'Content-Type: ' + mime.lookup(message.files[file].path) + CRLF + CRLF;
-//                      formData += 'Content-Type: application/octet-stream' + CRLF + CRLF;
-//
-//                      formData += data + CRLF + boundary;
-//                    }
-//                    catch (err) {
-//                      error = true;
-//                      done(message.files[file].path + ' does not exist', null);
-//                    }
-//                });          
-//            }
-//            else {
-//              formData += 'Content-Disposition: form-data; name="' + key + '"' + CRLF + CRLF + message[key] + CRLF + boundary;
-//           }
-//          });
-//    
-//        if (!error) {
-//          // Add the closing boundary
-//          formData = formData.trim() + '--';
-//          // Add the opening CRLF
-//          formData = CRLF + formData + '\n';
-//          done(null, formData);
-//        }
-//      };
-//    exports.makeMultipartBody = _makeMultipartBody;
     
     
     /**
