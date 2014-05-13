@@ -9,7 +9,6 @@
 module.exports = function() {
     var fs = require('fs'),
         https = require('https'),
-        mime = require('mime'),
         path = require('path');
     
     /**
