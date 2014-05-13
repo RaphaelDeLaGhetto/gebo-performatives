@@ -51,8 +51,30 @@ module.exports = function() {
           boundary += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length));
         }
     
-        return boundary + CRLF;
+        //return '---------------------------10102754414578508781458777923';
+        return boundary;
       };
+
+//    function _getMultipartBoundary(length) {
+//        var boundary = '--';
+//    
+//        if (typeof length === undefined || length == null) {
+//          length = MAX_LENGTH;
+//        }
+//        else if (length < 0) {
+//          throw 'Boundary cannot have negative length';
+//        }
+//        else if (length > MAX_LENGTH) {
+//          throw 'Boundary length exceeded';
+//        }
+//    
+//        for (var i = 0; i < length; i++) {
+//          boundary += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length));
+//        }
+//    
+//        return boundary + CRLF;
+//      };
+
     exports.getMultipartBoundary = _getMultipartBoundary;
     
     
