@@ -54,27 +54,6 @@ module.exports = function() {
         //return '---------------------------10102754414578508781458777923';
         return boundary;
       };
-
-//    function _getMultipartBoundary(length) {
-//        var boundary = '--';
-//    
-//        if (typeof length === undefined || length == null) {
-//          length = MAX_LENGTH;
-//        }
-//        else if (length < 0) {
-//          throw 'Boundary cannot have negative length';
-//        }
-//        else if (length > MAX_LENGTH) {
-//          throw 'Boundary length exceeded';
-//        }
-//    
-//        for (var i = 0; i < length; i++) {
-//          boundary += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length));
-//        }
-//    
-//        return boundary + CRLF;
-//      };
-
     exports.getMultipartBoundary = _getMultipartBoundary;
     
     
@@ -88,7 +67,8 @@ module.exports = function() {
     function _makeMultipartBody(message, done) {
         var error = false;
 
-        var boundary = _getMultipartBoundary();
+        // Called from exports for testing purposes 
+        var boundary = exports.getMultipartBoundary();
         var delimiter = CRLF + "--" + boundary;
         var closeDelimiter = delimiter + "--";
 
@@ -100,6 +80,7 @@ module.exports = function() {
               body = Buffer.concat([body,
                                     new Buffer('Content-Disposition: form-data; name="content"' +
                                                 CRLF + CRLF + JSON.stringify(message.content))]);
+              body = Buffer.concat([body, new Buffer(delimiter + CRLF)]);
             }
             else if (key.toLowerCase() === 'files') {
               var files = Object.keys(message.files);
@@ -112,6 +93,7 @@ module.exports = function() {
                                   new Buffer('Content-Type: application/octet-stream' + CRLF + CRLF),
                                   data,
                             ]);
+                      body = Buffer.concat([body, new Buffer(delimiter + CRLF)]);
                     }
                     catch (err) {
                       error = true;
@@ -123,8 +105,8 @@ module.exports = function() {
               body = Buffer.concat([body,
                                     new Buffer('Content-Disposition: form-data; name="'+
                                                 key +'"' + CRLF + CRLF + message[key])]);
+              body = Buffer.concat([body, new Buffer(delimiter + CRLF)]);
             }
-            body = Buffer.concat([body, new Buffer(delimiter + CRLF)]);
           });
 
 
