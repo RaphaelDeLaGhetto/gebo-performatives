@@ -173,13 +173,17 @@ module.exports = function() {
      * @param function
      */
     function _request(message, done) {
-        _makeMultipartBody(message, function(err, str) {
+        _makeMultipartBody(message, function(err, multipartBody) {
             if (err) {
               done(err, null);
             }
             else {
-              var multipartBody = new Buffer(str);
-              var boundary = str.slice(0, str.indexOf(CRLF, 2)).trim();
+//              var multipartBody = new Buffer(str);
+              // Is this too hacky? I just need the boundary,
+              // which is prefixed with a CRLF
+              var boundary = multipartBody.slice(2, MAX_LENGTH).toString();
+              boundary = boundary.slice(0, boundary.indexOf(CRLF));
+              //var boundary = multipartBody.slice(0, str.indexOf(CRLF, 2)).trim();
     
               var options = {
                         hostname: message.gebo.replace(/^http[s]:\/\//i, ''),
