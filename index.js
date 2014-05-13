@@ -17,9 +17,11 @@ module.exports = function() {
     var CRLF = '\r\n';
     
     /**
-     * Is a maximum length necessary?
+     * Maximum multipart boundary length.
+     * This says you can push it to 70 in total
+     * http://www.ietf.org/rfc/rfc2046.txt
      */
-    var MAX_LENGTH = 70;
+    var MAX_LENGTH = 40;
     
     /**
      * Alphanumerics
@@ -35,7 +37,7 @@ module.exports = function() {
      * @return string
      */
     function _getMultipartBoundary(length) {
-        var boundary = '--';
+        var boundary = '--Peace';
     
         if (typeof length === undefined || length == null) {
           length = MAX_LENGTH;
@@ -138,7 +140,7 @@ module.exports = function() {
             else {
               // Is this too hacky? I just need the boundary,
               // which is prefixed with a CRLF
-              var boundary = multipartBody.slice(2, MAX_LENGTH).toString();
+              var boundary = multipartBody.slice(2, MAX_LENGTH*2).toString();
               boundary = boundary.slice(0, boundary.indexOf(CRLF));
     
               var options = {

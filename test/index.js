@@ -42,31 +42,31 @@ exports.getMultipartBoundary = {
     'Return a random string of default length prefixed with "--"': function(test) {
         test.expect(2);
         var boundary = performative.getMultipartBoundary();
-        test.equal(boundary.length, 72);
-        test.equal(boundary.indexOf('--'), 0);
+        test.equal(boundary.length, 47);
+        test.equal(boundary.indexOf('--Peace'), 0);
         test.done();
     },
 
     'Return a random string of the length specified prefixed with "--"': function(test) {
         test.expect(2);
         var boundary = performative.getMultipartBoundary(16);
-        test.equal(boundary.length, 18);
-        test.equal(boundary.indexOf('--'), 0);
+        test.equal(boundary.length, 23);
+        test.equal(boundary.indexOf('--Peace'), 0);
         test.done();
     },
 
-    'Return a random string of the max length (70) prefixed with "--"': function(test) {
+    'Return a random string of the max length (40) prefixed with "--"': function(test) {
         test.expect(2);
-        var boundary = performative.getMultipartBoundary(70);
-        test.equal(boundary.length, 72);
-        test.equal(boundary.indexOf('--'), 0);
+        var boundary = performative.getMultipartBoundary(40);
+        test.equal(boundary.length, 47);
+        test.equal(boundary.indexOf('--Peace'), 0);
         test.done();
     },
 
     'Throw an expection when max length is exceeded': function(test) {
         test.expect(1);
         try {
-          var boundary = performative.getMultipartBoundary(71);
+          var boundary = performative.getMultipartBoundary(41);
           test.ok(false);
         }
         catch (err) {
@@ -90,8 +90,8 @@ exports.getMultipartBoundary = {
     'Return appropriately when zero length is specified': function(test) {
         test.expect(2);
         var boundary = performative.getMultipartBoundary(0);
-        test.equal(boundary.length, 2);
-        test.equal(boundary.indexOf('--'), 0);
+        test.equal(boundary.length, 7);
+        test.equal(boundary.indexOf('--Peace'), 0);
         test.done();
     },
 
