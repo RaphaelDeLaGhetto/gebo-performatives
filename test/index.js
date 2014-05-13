@@ -16,7 +16,6 @@ var CONTENT = {
  
 var FILES = {
         scripture: {
-            name: 'psalm90-12.txt',
             path: '/tmp/psalm90-12.txt',
             type: 'text/plain',
             size: 79,
@@ -232,10 +231,7 @@ exports.makeMultipartBody = {
         message.files = {};
         extend(true, message.files, FILES);
         message.files.samePassage = {
-            name: 'psalm90-12.txt',
             path: '/tmp/psalm90-12.txt',
-            type: 'text/plain',
-            size: 79,
         };
 
         var data = fs.readFileSync('/tmp/psalm90-12.txt');
@@ -285,7 +281,6 @@ exports.makeMultipartBody = {
         extend(true, message.files,
                         { 
                             myFile: {
-                                name: 'text.txt',
                                 path: 'test/sample/text.txt',
                             }
                         });
@@ -322,7 +317,6 @@ exports.makeMultipartBody = {
 //                access_token: ACCESS_TOKEN,
                 files: {
                     resume: {
-                        name: 'text.txt',
                         path: 'test/sample/text.txt',
                     },
                 },

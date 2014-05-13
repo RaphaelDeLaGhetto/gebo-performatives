@@ -9,7 +9,8 @@
 module.exports = function() {
     var fs = require('fs'),
         https = require('https'),
-        mime = require('mime');
+        mime = require('mime'),
+        path = require('path');
     
     /**
      * Form data lines terminate with this for some reason
@@ -87,9 +88,10 @@ module.exports = function() {
               files.forEach(function(file) {
                     try {
                       var data = fs.readFileSync(message.files[file].path);
+                      var filename = message.files[file].path.split(path.sep).pop();
                       body = Buffer.concat([body,
                                   new Buffer('Content-Disposition: form-data; name="' +
-                                              file + '"; filename="' + message.files[file].name + '"' + CRLF),
+                                              file + '"; filename="' + filename + '"' + CRLF),
                                   new Buffer('Content-Type: application/octet-stream' + CRLF + CRLF),
                                   data,
                             ]);
@@ -122,49 +124,6 @@ module.exports = function() {
       };
     exports.makeMultipartBody = _makeMultipartBody;
  
-//    function _makeMultipartBody(message, done) {
-//        var boundary = exports.getMultipartBoundary();
-//        var formData = boundary;
-//        var error = false;
-//    
-//        var keys = Object.keys(message);
-//        keys.forEach(function(key) {
-//            if (key.toLowerCase() === 'content') {
-//              formData += 'Content-Disposition: form-data; name="' + key + '"' + CRLF + CRLF + JSON.stringify(message[key]) + CRLF + boundary;
-//            }
-//            else if (key.toLowerCase() === 'files') {
-//              var files = Object.keys(message.files);
-//              files.forEach(function(file) {
-//                    try {
-//                      var data = fs.readFileSync(message.files[file].path);
-//                      formData += 'Content-Disposition: form-data; name="' + file + '"; filename="' + message.files[file].name + '"' + CRLF;
-//                      //formData += 'Content-Type: ' + mime.lookup(message.files[file].path) + CRLF + CRLF;
-//                      formData += 'Content-Type: application/octet-stream' + CRLF + CRLF;
-//
-//                      formData += data + CRLF + boundary;
-//                    }
-//                    catch (err) {
-//                      error = true;
-//                      done(message.files[file].path + ' does not exist', null);
-//                    }
-//                });          
-//            }
-//            else {
-//              formData += 'Content-Disposition: form-data; name="' + key + '"' + CRLF + CRLF + message[key] + CRLF + boundary;
-//           }
-//          });
-//    
-//        if (!error) {
-//          // Add the closing boundary
-//          formData = formData.trim() + '--';
-//          // Add the opening CRLF
-//          formData = CRLF + formData + '\n';
-//          done(null, formData);
-//        }
-//      };
-//    exports.makeMultipartBody = _makeMultipartBody;
-    
-    
     /**
      * POST a request performative to the gebo provided
      * in the message
@@ -178,12 +137,10 @@ module.exports = function() {
               done(err, null);
             }
             else {
-//              var multipartBody = new Buffer(str);
               // Is this too hacky? I just need the boundary,
               // which is prefixed with a CRLF
               var boundary = multipartBody.slice(2, MAX_LENGTH).toString();
               boundary = boundary.slice(0, boundary.indexOf(CRLF));
-              //var boundary = multipartBody.slice(0, str.indexOf(CRLF, 2)).trim();
     
               var options = {
                         hostname: message.gebo.replace(/^http[s]:\/\//i, ''),
