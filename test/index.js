@@ -359,7 +359,7 @@ exports.request = {
             done({ on: function(evt, done) {
                             switch(evt) {
                                 case 'data':
-                                    done('Hello, friendo');
+                                    done(new Buffer('Hello, friendo'));
                                     break;
                                 case 'end':
                                     done(null);
@@ -386,12 +386,22 @@ exports.request = {
     },
 
     'POST a request performative to the given gebo': function(test) {
-        test.expect(1);
+        test.expect(2);
         performative.request(MESSAGE, function(err, msg) {
+            test.equal(typeof msg, 'string');
             test.equal(msg, 'Hello, friendo');
             test.done();
           });
     },
 
+    'Return a returnBuffer parameter is true': function(test) {
+        test.expect(2);
+        performative.request(MESSAGE, true, function(err, msg) {
+            test.ok(Buffer.isBuffer(msg));
+            test.equal(msg, 'Hello, friendo');
+            test.done();
+          });
+    },
+    
 };
 

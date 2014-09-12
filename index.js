@@ -130,9 +130,14 @@ module.exports = function() {
      * in the message
      *
      * @param Object
+     * @param boolean
      * @param function
      */
-    function _request(message, done) {
+    function _request(message, returnBuffer, done) {
+        if (typeof returnBuffer === 'function') {
+          done = returnBuffer;
+          returnBuffer = false;
+        }
         _makeMultipartBody(message, function(err, multipartBody) {
             if (err) {
               done(err, null);
@@ -154,11 +159,21 @@ module.exports = function() {
                   };
     
               var req = https.request(options, function(res) {
-                    var data = '';
-                    res.setEncoding('utf8');
+                    if (returnBuffer) {
+                      var data = [];
+                    }
+                    else {
+                      var data = '';
+                      res.setEncoding('utf8');
+                    }
     
                     res.on('data', function(chunk) {
-                        data += chunk;
+                        if (returnBuffer) {
+                          data.push(chunk);
+                        }
+                        else {
+                          data += chunk;
+                        }
                       });
     
                     res.on('end', function(err) {
@@ -166,7 +181,15 @@ module.exports = function() {
                             done(err);
                           }
                           else {
-                            done(null, data);
+                            if (returnBuffer) {
+                              var buffer = new Buffer(data.reduce(function(prev, current) {
+                                    return prev.concat(Array.prototype.slice.call(current));
+                                }, []));
+                              done(null, buffer);
+                            }
+                            else {
+                              done(null, data);
+                            }
                           }
                       });
                 });
