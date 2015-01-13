@@ -56,9 +56,6 @@ var message = {
         // This is the single file you may pass to the gebo agent
         picture: {
 
-            // File name
-            name: 'mittens.jpg',
-
             // File path
             path: '/full/path/to/mittens.jpg',
           }
