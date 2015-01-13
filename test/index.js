@@ -186,7 +186,7 @@ exports.makeMultipartBody = {
                        'Content-Disposition: form-data; name="gebo"\r\n\r\nhttps://agent.capitolhill.ca\r\n--' + BOUNDARY + '\r\n' +
                        'Content-Disposition: form-data; name="access_token"\r\n\r\n' + ACCESS_TOKEN + '\r\n--' + BOUNDARY + '\r\n' +
                        'Content-Disposition: form-data; name="scripture"; filename="psalm90-12.txt"\r\n' + 
-                       'Content-Type: application/octet-stream\r\n\r\n' + data + '\r\n--' +  BOUNDARY.trim() + '--';
+                       'Content-Type: text/plain\r\n\r\n' + data + '\r\n--' +  BOUNDARY.trim() + '--';
 
         performative.makeMultipartBody(message, function(err, body) {
             test.equal(body.toString(), expected);
@@ -215,7 +215,7 @@ exports.makeMultipartBody = {
                        'Content-Disposition: form-data; name="access_token"\r\n\r\n' + ACCESS_TOKEN + '\r\n--' + BOUNDARY + '\r\n' +
                        'Content-Disposition: form-data; name="content"\r\n\r\n' + JSON.stringify(CONTENT) + '\r\n--' + BOUNDARY + '\r\n' +
                        'Content-Disposition: form-data; name="scripture"; filename="psalm90-12.txt"\r\n' + 
-                       'Content-Type: application/octet-stream\r\n\r\n' + data + '\r\n--' +  BOUNDARY.trim() + '--';
+                       'Content-Type: text/plain\r\n\r\n' + data + '\r\n--' +  BOUNDARY.trim() + '--';
 
         performative.makeMultipartBody(message, function(err, body) {
             test.equal(body.toString(), expected);
@@ -244,9 +244,9 @@ exports.makeMultipartBody = {
                        'Content-Disposition: form-data; name="gebo"\r\n\r\nhttps://agent.capitolhill.ca\r\n--' + BOUNDARY + '\r\n' +
                        'Content-Disposition: form-data; name="access_token"\r\n\r\n' + ACCESS_TOKEN + '\r\n--' + BOUNDARY + '\r\n' +
                        'Content-Disposition: form-data; name="scripture"; filename="psalm90-12.txt"\r\n' + 
-                       'Content-Type: application/octet-stream\r\n\r\n' + data + '\r\n--' + BOUNDARY + '\r\n' +
+                       'Content-Type: text/plain\r\n\r\n' + data + '\r\n--' + BOUNDARY + '\r\n' +
                        'Content-Disposition: form-data; name="samePassage"; filename="psalm90-12.txt"\r\n' + 
-                       'Content-Type: application/octet-stream\r\n\r\n' + data + '\r\n--' +  BOUNDARY.trim() + '--';
+                       'Content-Type: text/plain\r\n\r\n' + data + '\r\n--' +  BOUNDARY.trim() + '--';
 
         performative.makeMultipartBody(message, function(err, body) {
             test.equal(body.toString(), expected);

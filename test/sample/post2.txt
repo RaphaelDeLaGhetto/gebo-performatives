@@ -29,7 +29,7 @@ Content-Disposition: form-data; name="access_token"
 kh69HPPKdyetpfvNPM9MWykEeSRsFDqQhY5uMvBWDibKSfJoVj4U7CaQSwNTN11ac2libeMo2WiQ37Kp2D3epF3aPt1ZY1STHLYv2UEBGCfkrxpcc82WYRw3Rp0nZoXyvlyBcUreppTq1EZge3VaTFjbstK4addNauNc9uaXSeQ43mSWiNcxBNlE34HRDeUbCNKyf0ndCvaH0BBfUUOTZyvul78QhhM8pQRagvpcrhdP2XregEVi2s1TwaaqjFey
 -------------------------------10102754414578508781458777923
 Content-Disposition: form-data; name="resume"; filename="text.txt"
-Content-Type: application/octet-stream
+Content-Type: text/plain
 
 My name is Daniel Bidulock
 (403) 808-HUMP

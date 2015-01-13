@@ -2,13 +2,14 @@
 /**
  * gebo-performatives
  *
- * 2014 Daniel Bidulock
+ * Daniel Bidulock
  * MIT
  */
 
 module.exports = function() {
     var fs = require('fs'),
         https = require('https'),
+        mime = require('mime'),
         path = require('path');
     
     /**
@@ -53,7 +54,6 @@ module.exports = function() {
           boundary += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length));
         }
     
-        //return '---------------------------10102754414578508781458777923';
         return boundary;
       };
     exports.getMultipartBoundary = _getMultipartBoundary;
@@ -93,7 +93,7 @@ module.exports = function() {
                       body = Buffer.concat([body,
                                   new Buffer('Content-Disposition: form-data; name="' +
                                               file + '"; filename="' + filename + '"' + CRLF),
-                                  new Buffer('Content-Type: application/octet-stream' + CRLF + CRLF),
+                                  new Buffer('Content-Type: ' + mime.lookup(filename) + CRLF + CRLF),
                                   data,
                             ]);
                       body = Buffer.concat([body, new Buffer(delimiter + CRLF)]);

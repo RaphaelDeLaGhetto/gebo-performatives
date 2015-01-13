@@ -29,7 +29,7 @@ Content-Disposition: form-data; name="content"
 {"resource":"greetings","mood":"friendly"}
 ----SomeBoundary
 Content-Disposition: form-data; name="myFile"; filename="text.txt"
-Content-Type: application/octet-stream
+Content-Type: text/plain
 
 My name is Daniel Bidulock
 (403) 808-HUMP
