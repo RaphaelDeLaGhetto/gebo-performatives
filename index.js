@@ -10,7 +10,8 @@ module.exports = function() {
     var fs = require('fs'),
         https = require('https'),
         mime = require('mime'),
-        path = require('path');
+        path = require('path'),
+        url = require('url');
     
     /**
      * Form data lines terminate with this for some reason
@@ -148,9 +149,19 @@ module.exports = function() {
               var boundary = multipartBody.slice(2, MAX_LENGTH*2).toString();
               boundary = boundary.slice(0, boundary.indexOf(CRLF));
     
+              // Is there a port in the URL? Get it and remove from gebo address
+              var port = 443;
+              var urlObj = url.parse(message.gebo);
+              if (urlObj.port) {
+                port = urlObj.port;
+                urlObj.port = null;
+                var re = new RegExp(':' + port);
+                message.gebo = message.gebo.replace(re, '');
+              }
+
               var options = {
                         hostname: message.gebo.replace(/^http[s]:\/\//i, ''),
-                        port: 443,
+                        port: port,
                         path: '/perform',
                         method: 'POST',
                         rejectUnauthorized: false,

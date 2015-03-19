@@ -135,7 +135,6 @@ exports.makeMultipartBody = {
                        'Content-Disposition: form-data; name="gebo"\r\n\r\nhttps://agent.capitolhill.ca\r\n--' + BOUNDARY + '\r\n' +
                        'Content-Disposition: form-data; name="access_token"\r\n\r\n' + ACCESS_TOKEN + '\r\n--' + BOUNDARY.trim() + '--';
 
-        console.log(performative.getMultipartBoundary());
         performative.makeMultipartBody(MESSAGE, function(err, body) {
             test.equal(body.toString(), expected);
             test.done();               
@@ -403,5 +402,52 @@ exports.request = {
           });
     },
     
+    'Set the port option correctly if provided in the URL': function(test) {
+        test.expect(8);
+
+        https.request = function(options, done) {
+            test.equal(options.hostname, 'agent.capitolhill.ca');
+            test.equal(options.port, 3443);
+            test.equal(options.path, '/perform');
+            test.equal(options.method, 'POST');
+            test.equal(options.headers['Content-Type'], 'multipart/form-data; boundary=--SomeBoundary');
+            test.equal(options.headers['Content-Length'], 539);
+             
+            done({ on: function(evt, done) {
+                            switch(evt) {
+                                case 'data':
+                                    done(new Buffer('Hello, friendo'));
+                                    break;
+                                case 'end':
+                                    done(null);
+                                    break;
+                            }
+                        },
+                   setEncoding: function() {},
+                });
+
+            return { end: function() {},
+                     on: function(evt, done) {},
+                     write: function(body) {
+                                assert.ok(body instanceof Buffer);
+                              },
+                   };
+          };
+
+        var message = {
+            sender: 'daniel@capitolhill.ca',
+            receiver: 'agent@capitolhill.ca',
+            performative: 'request',
+            action: 'greeting',
+            gebo: 'https://agent.capitolhill.ca:3443',
+            access_token: ACCESS_TOKEN,
+        };
+
+        performative.request(message, true, function(err, msg) {
+            test.ok(Buffer.isBuffer(msg));
+            test.equal(msg, 'Hello, friendo');
+            test.done();
+          });
+    },
 };
 
