@@ -1,6 +1,6 @@
 {
   "name": "gebo-performatives",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "A speech act module for the gebo agent",
   "main": "index.js",
   "scripts": {
